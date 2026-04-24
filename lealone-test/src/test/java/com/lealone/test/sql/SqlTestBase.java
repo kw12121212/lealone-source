@@ -53,7 +53,7 @@ public class SqlTestBase extends TestBase implements TestBase.SqlExecutor, TestB
     }
 
     protected boolean autoStartTcpServer() {
-        return false;
+        return true;
     }
 
     private static boolean tcpServerStarted = false;

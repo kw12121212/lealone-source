@@ -5,6 +5,8 @@
  */
 package com.lealone.test.sql.dml;
 
+import java.io.File;
+
 import org.junit.Test;
 
 import com.lealone.test.sql.SqlTestBase;
@@ -25,8 +27,12 @@ public class ScriptTest extends SqlTestBase {
         executeUpdate("drop table ScriptTest");
         executeUpdate("RUNSCRIPT FROM 'my_script_test.sql'");
 
-        executeUpdate("drop table ScriptTest");
         String fileName = "./target/test-data/script_directory/my_script_test.sql";
+        new File(fileName).getParentFile().mkdirs();
+        sql = "SCRIPT SIMPLE NODATA NOPASSWORDS NOSETTINGS TO '" + fileName + "' TABLE ScriptTest";
+        printResultSet();
+
+        executeUpdate("drop table ScriptTest");
         executeUpdate("RUNSCRIPT FROM '" + fileName + "'");
     }
 }

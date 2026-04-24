@@ -583,7 +583,12 @@ public abstract class Model<T extends Model<T>> {
         for (int i = 0; i < len; i++) {
             // 只反序列化非null字段
             if (row[i] != null && row[i] != ValueNull.INSTANCE) {
-                map.put(fieldNames[i], row[i]);
+                String fieldName = fieldNames[i];
+                map.put(fieldName, row[i]);
+                int dotIndex = fieldName.lastIndexOf('.');
+                if (dotIndex >= 0) {
+                    map.put(fieldName.substring(dotIndex + 1), row[i]);
+                }
             }
         }
         for (Model<?> m : set) {
@@ -741,8 +746,15 @@ public abstract class Model<T extends Model<T>> {
         int len = result.getVisibleColumnCount();
         String[] fieldNames = new String[len];
         for (int i = 0; i < len; i++) {
-            fieldNames[i] = result.getSchemaName(i) + "." + result.getTableName(i) + "."
-                    + result.getColumnName(i);
+            String schemaName = result.getSchemaName(i);
+            String tableName = result.getTableName(i);
+            String columnName = result.getColumnName(i);
+            if (schemaName == null || schemaName.isEmpty() || tableName == null
+                    || tableName.isEmpty()) {
+                fieldNames[i] = columnName;
+            } else {
+                fieldNames[i] = schemaName + "." + tableName + "." + columnName;
+            }
         }
         return fieldNames;
     }

@@ -35,8 +35,6 @@ public class PSet<M extends Model<M>, E> extends PBase<M, Set<E>> {
     @Override
     @SuppressWarnings("unchecked")
     protected void deserialize(Value v) {
-        if (v instanceof ValueSet) {
-            this.value = (Set<E>) v.getObject();
-        }
+        this.value = (Set<E>) v.convertTo(Value.SET).getObject();
     }
 }

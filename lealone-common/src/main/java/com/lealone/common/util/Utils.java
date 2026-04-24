@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -600,7 +601,15 @@ public class Utils {
             try {
                 return Class.forName(className, true, Thread.currentThread().getContextClassLoader());
             } catch (Exception e2) {
-                throw DbException.get(ErrorCode.CLASS_NOT_FOUND_1, e, className);
+                try {
+                    return Class.forName(className, true, ClassLoader.getSystemClassLoader());
+                } catch (Exception e3) {
+                    try {
+                        return getClasspathClassLoader().loadClass(className);
+                    } catch (Exception e4) {
+                        throw DbException.get(ErrorCode.CLASS_NOT_FOUND_1, e, className);
+                    }
+                }
             }
         } catch (NoClassDefFoundError e) {
             throw DbException.get(ErrorCode.CLASS_NOT_FOUND_1, e, className);
@@ -608,6 +617,15 @@ public class Utils {
             // UnsupportedClassVersionError
             throw DbException.get(ErrorCode.GENERAL_ERROR_1, e, className);
         }
+    }
+
+    private static ClassLoader getClasspathClassLoader() throws Exception {
+        String[] entries = System.getProperty("java.class.path", "").split(File.pathSeparator);
+        URL[] urls = new URL[entries.length];
+        for (int i = 0; i < entries.length; i++) {
+            urls[i] = new File(entries[i]).toURI().toURL();
+        }
+        return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
     }
 
     /**

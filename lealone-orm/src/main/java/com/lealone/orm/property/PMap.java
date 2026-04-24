@@ -43,9 +43,7 @@ public class PMap<M extends Model<M>, K, V> extends PBase<M, Map<K, V>> {
     @Override
     @SuppressWarnings("unchecked")
     protected void deserialize(Value v) {
-        if (v instanceof ValueMap) {
-            this.value = (Map<K, V>) v.getObject();
-        }
+        this.value = (Map<K, V>) v.convertTo(Value.MAP).getObject();
     }
 
     @Override

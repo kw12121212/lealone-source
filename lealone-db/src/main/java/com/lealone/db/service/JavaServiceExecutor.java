@@ -94,6 +94,7 @@ public class JavaServiceExecutor extends ServiceExecutorBase {
         init();
         Method method = objectMethodMap.get(methodName);
         Object[] args = getServiceMethodArgs(methodName, methodArgs);
+        args = convertServiceMethodArgs(method, args);
         try {
             Object ret = method.invoke(implementClassObject, args);
             if (ret == null)
@@ -109,6 +110,7 @@ public class JavaServiceExecutor extends ServiceExecutorBase {
         init();
         Method method = objectMethodMap.get(methodName);
         Object[] args = getServiceMethodArgs(methodName, methodArgs);
+        args = convertServiceMethodArgs(method, args);
         try {
             Object ret = method.invoke(implementClassObject, args);
             if (ret == null)
@@ -124,11 +126,64 @@ public class JavaServiceExecutor extends ServiceExecutorBase {
         init();
         Method method = objectMethodMap.get(methodName);
         Object[] args = getServiceMethodArgs(methodName, json);
+        args = convertServiceMethodArgs(method, args);
         try {
             Object ret = method.invoke(implementClassObject, args);
             if (ret == null)
                 return null;
             return ret.toString();
+        } catch (Exception e) {
+            throw DbException.convert(e);
+        }
+    }
+
+    private Object[] convertServiceMethodArgs(Method method, Object[] args) {
+        if (args == null)
+            return args;
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        for (int i = 0; i < args.length && i < parameterTypes.length; i++) {
+            Object arg = args[i];
+            Class<?> parameterType = parameterTypes[i];
+            if (arg == null || isAssignable(parameterType, arg)) {
+                continue;
+            }
+            if (arg instanceof String) {
+                args[i] = decodeStringArg(parameterType, (String) arg);
+            }
+        }
+        return args;
+    }
+
+    private boolean isAssignable(Class<?> parameterType, Object arg) {
+        if (!parameterType.isPrimitive())
+            return parameterType.isInstance(arg);
+        if (parameterType == boolean.class)
+            return arg instanceof Boolean;
+        if (parameterType == byte.class)
+            return arg instanceof Byte;
+        if (parameterType == short.class)
+            return arg instanceof Short;
+        if (parameterType == int.class)
+            return arg instanceof Integer;
+        if (parameterType == long.class)
+            return arg instanceof Long;
+        if (parameterType == float.class)
+            return arg instanceof Float;
+        if (parameterType == double.class)
+            return arg instanceof Double;
+        if (parameterType == char.class)
+            return arg instanceof Character;
+        return false;
+    }
+
+    private Object decodeStringArg(Class<?> parameterType, String arg) {
+        try {
+            Method decode = parameterType.getMethod("decode", String.class);
+            if (!Modifier.isStatic(decode.getModifiers()))
+                return arg;
+            return decode.invoke(null, arg);
+        } catch (NoSuchMethodException e) {
+            return arg;
         } catch (Exception e) {
             throw DbException.convert(e);
         }

@@ -130,6 +130,9 @@ public abstract class ModelProperty<M extends Model<M>> {
     // map存放的是查询结果集某一条记录各个字段的值
     protected void deserialize(HashMap<String, Value> map) {
         Value v = map.get(getFullName());
+        if (v == null) {
+            v = map.get(name);
+        }
         if (v != null) {
             deserialize(v);
         }

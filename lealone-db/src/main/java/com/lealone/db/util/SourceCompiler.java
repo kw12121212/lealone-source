@@ -247,20 +247,31 @@ public class SourceCompiler {
         if (compiledClass != null) {
             return compiledClass;
         }
-        URL[] urls;
+        ArrayList<URL> urlList = new ArrayList<>();
         if (classDir != null) {
             try {
-                urls = new URL[] { classDir.toURI().toURL() };
+                urlList.add(classDir.toURI().toURL());
             } catch (MalformedURLException e) {
                 throw DbException.convert(e);
             }
-        } else {
-            if (this.urls != null)
-                urls = this.urls;
-            else
-                urls = new URL[0];
         }
-        ClassLoader classLoader = new URLClassLoader(urls, getClass().getClassLoader()) {
+        if (this.urls != null) {
+            Collections.addAll(urlList, this.urls);
+        }
+        for (String entry : System.getProperty("java.class.path", "").split(File.pathSeparator)) {
+            if (!entry.isEmpty()) {
+                try {
+                    urlList.add(new File(entry).toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw DbException.convert(e);
+                }
+            }
+        }
+        ClassLoader parent = Thread.currentThread().getContextClassLoader();
+        if (parent == null) {
+            parent = getClass().getClassLoader();
+        }
+        ClassLoader classLoader = new URLClassLoader(urlList.toArray(new URL[0]), parent) {
             @Override
             public Class<?> findClass(String name) throws ClassNotFoundException {
                 Class<?> classInstance = compiled.get(name);

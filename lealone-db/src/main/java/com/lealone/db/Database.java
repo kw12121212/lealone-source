@@ -1661,6 +1661,8 @@ public class Database extends DbObjectBase implements DataHandler {
      */
     public Table getFirstUserTable() {
         for (Table table : getAllTablesAndViews(false)) {
+            if (isSystemSchema(table.getSchema()))
+                continue;
             if (TableAlterHistory.getName().equalsIgnoreCase(table.getName()))
                 continue;
             if (table.getCreateSQL() != null) {

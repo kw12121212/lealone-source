@@ -35,8 +35,6 @@ public class PList<M extends Model<M>, E> extends PBase<M, List<E>> {
     @Override
     @SuppressWarnings("unchecked")
     protected void deserialize(Value v) {
-        if (v instanceof ValueList) {
-            this.value = (List<E>) v.getObject();
-        }
+        this.value = (List<E>) v.convertTo(Value.LIST).getObject();
     }
 }
