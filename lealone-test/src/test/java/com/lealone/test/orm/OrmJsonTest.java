@@ -26,8 +26,7 @@ public class OrmJsonTest extends OrmTestBase {
     @Before
     @Override
     public void setUpBefore() {
-        setEmbedded(true);
-        setInMemory(true);
+        super.setUpBefore();
         SqlScript.createUserTable(this);
         SqlScript.createJsonTestTable(this);
         oldJsonFormat = System.getProperty("lealone.orm.json.format");

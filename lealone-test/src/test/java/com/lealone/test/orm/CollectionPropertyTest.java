@@ -10,19 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.lealone.test.orm.generated.CollectionProperty;
 
 public class CollectionPropertyTest extends OrmTestBase {
-    @Before
-    @Override
-    public void setUpBefore() {
-        setEmbedded(true);
-        setInMemory(true);
-    }
-
     @Test
     public void run() throws Exception {
         SqlScript.createCollectionPropertyTable(this);

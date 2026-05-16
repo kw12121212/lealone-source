@@ -15,7 +15,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.lealone.db.api.JavaObjectSerializer;
@@ -26,13 +25,6 @@ import com.lealone.test.orm.generated.AllModelProperty;
 import com.lealone.test.service.generated.AllTypeService;
 
 public class AllModelPropertyTest extends OrmTestBase {
-    @Before
-    @Override
-    public void setUpBefore() {
-        setEmbedded(true);
-        setInMemory(true);
-    }
-
     @Test
     public void run() throws Exception {
         // Utils.serializer = new MyJavaObjectSerializer();

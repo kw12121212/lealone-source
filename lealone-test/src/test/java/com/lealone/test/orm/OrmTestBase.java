@@ -6,6 +6,7 @@
 package com.lealone.test.orm;
 
 import org.junit.Before;
+import com.lealone.db.Constants;
 import com.lealone.test.UnitTestBase;
 
 public abstract class OrmTestBase extends UnitTestBase {
@@ -14,9 +15,10 @@ public abstract class OrmTestBase extends UnitTestBase {
     public void setUpBefore() {
         setEmbedded(true);
         setInMemory(true);
-        // String sql = "select count(*) from information_schema.tables where table_name='CUSTOMER'";
-        // if (count(sql) <= 0) {
+        // 删除LealoneDatabase的持久化元数据，
+        // 避免前一个测试类在同一个目录下创建的数据库被恢复
+        deleteFileRecursive(TEST_DIR);
+        System.setProperty(Constants.JDBC_URL_KEY, getURL());
         SqlScript.createTables(this);
-        // }
     }
 }

@@ -15,6 +15,8 @@ public class SessionTest extends DbTestBase {
     public void run() {
         setInMemory(true);
         setEmbedded(true);
+        // 删除LealoneDatabase的持久化元数据
+        deleteFileRecursive(TEST_DIR);
 
         String url = getURL();
         ServerSession session = createServerSession(url);
