@@ -1669,7 +1669,8 @@ public class Database extends DbObjectBase implements DataHandler {
         for (Table table : getAllTablesAndViews(false)) {
             if (isSystemSchema(table.getSchema()))
                 continue;
-            if (TableAlterHistory.getName().equalsIgnoreCase(table.getName()))
+            if (TableAlterHistory.getName().equalsIgnoreCase(table.getName())
+                    || ExternalService.getName().equalsIgnoreCase(table.getName()))
                 continue;
             if (table.getCreateSQL() != null) {
                 if (table.isHidden()) {

@@ -5,13 +5,13 @@
  */
 package com.lealone.orm.property;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.lealone.db.value.Value;
 import com.lealone.db.value.ValueSet;
 import com.lealone.orm.Model;
-import com.lealone.orm.format.JsonFormat;
-import com.lealone.orm.format.SetFormat;
 
 /**
  * Set property.
@@ -23,11 +23,6 @@ public class PSet<M extends Model<M>, E> extends PBase<M, Set<E>> {
     }
 
     @Override
-    protected SetFormat<E> getValueFormat(JsonFormat format) {
-        return format.getSetFormat();
-    }
-
-    @Override
     protected Value createValue(Set<E> values) {
         return ValueSet.get(values);
     }
@@ -36,5 +31,13 @@ public class PSet<M extends Model<M>, E> extends PBase<M, Set<E>> {
     @SuppressWarnings("unchecked")
     protected void deserialize(Value v) {
         this.value = (Set<E>) v.convertTo(Value.SET).getObject();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Set<E> decode(Object v) {
+        if (v instanceof List)
+            return new HashSet<>((List<E>) v);
+        return (Set<E>) v;
     }
 }
