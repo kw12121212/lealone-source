@@ -5,7 +5,7 @@
 
 * 能够彻底颠覆现有的应用软件开发模式
 
-* 适用于个人助理和各种规模的企业应用
+* 适用于氛围编程和各种规模的企业应用
 
 
 ### 构建 Lealone
@@ -31,15 +31,11 @@
 
 ```sql
 set llm (
-    provider: 'doubao', --目前只支持doubao
+    provider: 'doubao', --目前支持doubao和deepseek
     model: 'doubao-seed-2-0-pro-260215',
     api_key: '替换成你的apikey'
 );
 ```
-
-### 个人助理
-
-在 agent 窗口中用自然语言随意输入一段文字用分号结束
 
 
 ### 氛围编程
@@ -73,7 +69,7 @@ execute service my_service get_current_time();
 -- 以下是 services.sql 文件的内容，也可以换成其他文件名
 
 set llm (
-    provider: 'doubao', --目前只支持doubao
+    provider: 'doubao', --目前支持doubao和deepseek
     model: 'doubao-seed-2-0-pro-260215',
     api_key: '替换成你的apikey'
 );
