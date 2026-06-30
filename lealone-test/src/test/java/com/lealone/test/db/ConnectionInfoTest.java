@@ -7,12 +7,19 @@ package com.lealone.test.db;
 
 import java.util.Properties;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.lealone.db.ConnectionInfo;
 import com.lealone.db.ConnectionSetting;
 
 public class ConnectionInfoTest extends DbTestBase {
+    @Before
+    @Override
+    public void setUpBefore() {
+        // This test verifies raw URL parsing and configures each URL explicitly.
+    }
+
     @Test
     public void run() {
         setEmbedded(true);

@@ -30,6 +30,7 @@ public class ExecuteServiceTest extends SqlTestBase {
         // 创建user表
         SqlScript.createUserTable(this);
         SqlScript.createAllModelPropertyTable(this);
+        GeneratedModelTestSupport.createModelTables();
         createService(this);
         executeService(url);
     }
@@ -51,6 +52,8 @@ public class ExecuteServiceTest extends SqlTestBase {
 
         // 调用create没有传递url时，通过getProperty(Constants.JDBC_URL_KEY)自动获取
         UserService userService = UserService.create();
+        userService.delete("zhh");
+        userService.delete("zhh2");
 
         User user = new User().name.set("zhh").phone.set(123);
         userService.add(user);

@@ -12,11 +12,15 @@ public abstract class OrmTestBase extends UnitTestBase {
     @Before
     @Override
     public void setUpBefore() {
-        setEmbedded(true);
-        setInMemory(true);
+        useOrmEmbeddedInMemoryUrl();
         // String sql = "select count(*) from information_schema.tables where table_name='CUSTOMER'";
         // if (count(sql) <= 0) {
         SqlScript.createTables(this);
         // }
+    }
+
+    protected void useOrmEmbeddedInMemoryUrl() {
+        dbName = "orm_test";
+        useEmbeddedInMemoryUrl();
     }
 }

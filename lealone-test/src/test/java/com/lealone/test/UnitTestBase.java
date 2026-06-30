@@ -14,6 +14,8 @@ import java.sql.Statement;
 import org.junit.After;
 import org.junit.Before;
 
+import com.lealone.db.Constants;
+
 //标识它的子类是进行单元测试的
 public class UnitTestBase extends TestBase implements TestBase.SqlExecutor, TestBase.EmbeddedTest {
 
@@ -59,12 +61,18 @@ public class UnitTestBase extends TestBase implements TestBase.SqlExecutor, Test
 
     @Before
     public void setUpBefore() {
+        useEmbeddedInMemoryUrl();
+    }
+
+    protected void useEmbeddedInMemoryUrl() {
         setEmbedded(true);
         setInMemory(true);
+        System.setProperty(Constants.JDBC_URL_KEY, getURL());
     }
 
     @After
     public void tearDownAfter() {
+        System.clearProperty(Constants.JDBC_URL_KEY);
     }
 
     public void runTest() {
@@ -73,14 +81,16 @@ public class UnitTestBase extends TestBase implements TestBase.SqlExecutor, Test
 
     public void runTest(boolean isEmbeddedMemoryMode) {
         if (isEmbeddedMemoryMode) {
-            setEmbedded(true);
-            setInMemory(true);
+            useEmbeddedInMemoryUrl();
+        } else {
+            System.setProperty(Constants.JDBC_URL_KEY, getURL());
         }
-        System.setProperty(com.lealone.db.Constants.JDBC_URL_KEY, getURL());
         try {
             test();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            System.clearProperty(Constants.JDBC_URL_KEY);
         }
     }
 

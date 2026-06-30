@@ -29,8 +29,7 @@ public class AllModelPropertyTest extends OrmTestBase {
     @Before
     @Override
     public void setUpBefore() {
-        setEmbedded(true);
-        setInMemory(true);
+        useOrmEmbeddedInMemoryUrl();
     }
 
     @Test

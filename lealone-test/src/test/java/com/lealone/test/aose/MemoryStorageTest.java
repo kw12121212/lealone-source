@@ -17,6 +17,6 @@ public class MemoryStorageTest extends AoseTestBase {
         test.setInMemory(true);
         test.setEmbedded(true);
         test.printURL();
-        CRUDExample.crud(test.getConnection());
+        CRUDExample.crud(test.getConnection(getClass().getSimpleName()));
     }
 }

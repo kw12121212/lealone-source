@@ -16,6 +16,7 @@ public class DynamicExecutorServiceTest extends SqlTestBase {
     @Test
     public void testService() throws Exception {
         SqlScript.createUserTable(this);
+        GeneratedModelTestSupport.createModelTables();
         executeUpdate("drop service if exists dynamic_executor_service");
         sql = "create service if not exists dynamic_executor_service (" //
                 + " add(user user) long," // 第一个user是参数名，第二个user是参数类型
